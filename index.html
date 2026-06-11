@@ -1,166 +1,231 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Feliz Aniversário ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Alguém Especial ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background-color: #000;
+            color: white;
+        }
 
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+        /* Slideshow de Fundo */
+        .bg-slider {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
 
-body{
-    height:100vh;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#0f0000,#2b0000,#000);
-    font-family:'Arial',sans-serif;
-}
+        .bg-slider img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            transition: opacity 1.5s ease-in-out;
+            opacity: 0;
+        }
 
-.container{
-    text-align:center;
-    z-index:10;
-    padding:20px;
-}
+        /* Camada escura para dar leitura ao texto */
+        .overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
 
-.title{
-    color:#ff4d6d;
-    font-size:4rem;
-    font-weight:bold;
-    text-shadow:
-        0 0 10px #ff4d6d,
-        0 0 20px #ff4d6d,
-        0 0 40px #ff4d6d,
-        0 0 80px #ff4d6d;
-    animation:pulse 2s infinite;
-}
+        /* Conteúdo Principal */
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
 
-.message{
-    margin-top:20px;
-    color:white;
-    font-size:1.5rem;
-    opacity:0;
-    animation:fadeIn 2s forwards;
-    animation-delay:3s;
-}
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
 
-.heart{
-    position:absolute;
-    color:#ff2d55;
-    font-size:25px;
-    animation:fall linear forwards;
-}
+        .content p {
+            font-size: 1.3rem;
+            max-width: 600px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+        }
 
-@keyframes fall{
-    from{
-        transform:translateY(-100px);
-        opacity:1;
-    }
-    to{
-        transform:translateY(110vh);
-        opacity:0;
-    }
-}
+        /* Botão Mágico */
+        button {
+            margin-top: 25px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff4081, #e91e63);
+            color: white;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+            display: none;
+            transition: transform 0.3s;
+        }
 
-@keyframes pulse{
-    0%{
-        transform:scale(1);
-    }
-    50%{
-        transform:scale(1.05);
-    }
-    100%{
-        transform:scale(1);
-    }
-}
+        button:hover {
+            transform: scale(1.1);
+        }
 
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
+        /* Carta de Aniversário */
+        .card {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            z-index: 10;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
-.final-message{
-    position:absolute;
-    bottom:50px;
-    width:100%;
-    text-align:center;
-    color:#fff;
-    font-size:1.2rem;
-    opacity:0;
-    animation:fadeIn 2s forwards;
-    animation-delay:6s;
-}
-</style>
+        .card-content {
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto; /* Permite rolar o texto se a tela do telemóvel for pequena */
+            background: white;
+            color: #333;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: left; /* Texto alinhado à esquerda para parecer uma carta real */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-content h2 {
+            color: #e91e63;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .card-content p {
+            color: #444;
+            text-shadow: none;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn-fechar {
+            display: block;
+            margin: 20px auto 0 auto;
+            background: #333;
+            box-shadow: none;
+        }
+
+        /* Efeito de Corações Flutuantes */
+        .heart {
+            position: fixed;
+            bottom: -10px;
+            color: rgba(255, 64, 129, 0.6);
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 4s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) translateX(0); opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-    <div class="title" id="title">
-        Feliz Aniversário ❤️
+    <div class="bg-slider">
+        <img src="718935167_1583864616450129_6634669553310719313_n.jpg" style="opacity: 1;">
+        <img src="719050204_1479127983410023_5768568715651057165_n.jpg">
+        <img src="719490071_1538880857593996_6548815312753842156_n.jpg">
     </div>
 
-    <div class="message" id="message">
-        Meu Amor 🌹
+    <div class="overlay"></div>
+
+    <div class="content">
+        <h1>Feliz Aniversário, amor! ❤️</h1>
+        <p>Hoje é o dia de celebrar a existência de alguém que torna o mundo muito mais bonito.</p>
+        <button id="btnSurpresa" onclick="abrirCarta()">Abrir a minha mensagem ❤️</button>
     </div>
-</div>
 
-<div class="final-message">
-    Que os teus 17 anos sejam repletos de felicidade ✨
-</div>
+    <div class="card" id="janelaCarta">
+        <div class="card-content">
+            <h2>Meu amor, ❤️</h2>
+            <p>
+                Acabou de bater meia-noite, e o meu coração não me deixaria esperar nem mais um instante sem ser uma das primeiras pessoas a desejar-te um feliz aniversário.<br><br>
+                Hoje completas 17 anos, e, neste momento tão especial, só consigo agradecer por existires e por iluminares a minha vida com a tua presença. Ao longo do tempo que partilhámos, foste conquistando um lugar único no meu coração. O teu sorriso tem o poder de tornar os meus dias mais leves, o teu jeito de ser encanta-me todos os dias, e a tua força e carinho fazem-me sentir verdadeiramente feliz por te ter ao meu lado.<br><br>
+                Desejo que este novo capítulo da tua vida seja repleto de felicidade, saúde, paz, amor e sonhos realizados. Que Deus guie cada passo teu, ilumine os teus caminhos e te conceda tudo aquilo que o teu coração mais deseja.<br><br>
+                Quero que saibas que admiro profundamente a mulher maravilhosa que estás a tornar-te. É impossível não me orgulhar da tua essência, da tua coragem e da beleza que carregas dentro de ti. Sou grato por cada momento que vivemos juntos, por cada sorriso partilhado e por cada memória que construímos. Estar contigo torna a minha vida mais bonita e o meu coração mais completo.<br><br>
+                Neste dia tão especial, desejo que recebas todo o amor, carinho e felicidade que mereces, porque és alguém verdadeiramente extraordinária. Que nunca te faltem motivos para somar e que a vida te abrace com a mesma ternura com que eu te guardo no meu coração.<br><br>
+                Parabéns pelos teus 17 anos, meu amor. Que este seja um dos aniversários mais felizes da tua vida e apenas o início de um ano cheio de momentos inesquecíveis. ❤️🎂✨
+            </p>
+            <button class="btn-fechar" onclick="fecharCarta()">Fechar x</button>
+        </div>
+    </div>
 
-<script>
-function createHeart() {
-    const heart = document.createElement("div");
+    <script>
+        // CONFIGURAÇÃO DO SLIDESHOW
+        const listaFotos = [
+            "718935167_1583864616450129_6634669553310719313_n.jpg", 
+            "719050204_1479127983410023_5768568715651057165_n.jpg", 
+            "719490071_1538880857593996_6548815312753842156_n.jpg"
+        ];
+        
+        let fotoAtual = 0;
 
-    heart.classList.add("heart");
+        function rodarSlideshow() {
+            const imagens = document.querySelectorAll(".bg-slider img");
+            if(imagens.length < 2) return;
+            
+            imagens[fotoAtual].style.opacity = "0";
+            fotoAtual = (fotoAtual + 1) % imagens.length;
+            imagens[fotoAtual].style.opacity = "1";
+        }
+        setInterval(rodarSlideshow, 4000);
 
-    const items = ["❤️","🌹","💖","💕"];
+        // O botão surge após 5 segundos para criar a expectativa
+        setTimeout(() => {
+            const btn = document.getElementById("btnSurpresa");
+            btn.style.display = "inline-block";
+        }, 5000);
 
-    heart.innerHTML =
-        items[Math.floor(Math.random()*items.length)];
+        function abrirCarta() { document.getElementById("janelaCarta").style.display = "flex"; }
+        function fecharCarta() { document.getElementById("janelaCarta").style.display = "none"; }
 
-    heart.style.left =
-        Math.random()*100 + "vw";
-
-    heart.style.animationDuration =
-        (Math.random()*4 + 3) + "s";
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    },7000);
-}
-
-setInterval(createHeart,200);
-
-setTimeout(()=>{
-    document.getElementById("title").innerHTML =
-    "Meu Amor ❤️";
-},4000);
-
-setTimeout(()=>{
-    document.getElementById("message").innerHTML =
-    "Hoje celebramos os teus 17 anos 🎂✨";
-},7000);
-
-setTimeout(()=>{
-    document.getElementById("title").innerHTML =
-    "Te amo!❤️";
-},10000);
-</script>
+        // Gerador de corações
+        function criarCoracao() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+            heart.style.fontSize = (Math.random() * 15 + 15) + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(criarCoracao, 400);
+    </script>
 
 </body>
 </html>
